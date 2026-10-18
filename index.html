@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nota: Cara Buat Video AI guna Google Flow</title>
+<style>
+:root{--b1:#dfe9ff;--b2:#f1dcff;--b3:#d2f5ee;--gl:rgba(255,255,255,.58);--bd:rgba(255,255,255,.85);--tx:#10162b;--mu:#38425f;--ac:#2d3fd0;--ax:#fff;--ok:#08703f;--bad:#a4182b;--sh:0 10px 34px rgba(40,50,120,.18);--in:rgba(255,255,255,.75);--ln:rgba(16,22,43,.18)}
+:root[data-theme=dark]{--b1:#0a0f22;--b2:#24113f;--b3:#07303a;--gl:rgba(22,28,54,.58);--bd:rgba(255,255,255,.17);--tx:#f3f6ff;--mu:#c6cee9;--ac:#86e0ff;--ax:#07142a;--ok:#6ff0ae;--bad:#ff9aa8;--sh:0 10px 34px rgba(0,0,0,.5);--in:rgba(8,12,28,.6);--ln:rgba(255,255,255,.22)}
+*{box-sizing:border-box}
+html{scroll-padding-top:120px}
+body{margin:0;min-height:100vh;font:18px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:radial-gradient(circle at 12% 8%,var(--b3),transparent 45%),radial-gradient(circle at 90% 30%,var(--b2),transparent 50%),linear-gradient(160deg,var(--b1),var(--b2));background-attachment:fixed;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.g{background:var(--gl);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border:1px solid var(--bd);box-shadow:var(--sh)}
+header{position:sticky;top:0;z-index:5;padding:10px 14px;border-radius:0 0 18px 18px;border-top:0}
+.hr{display:flex;align-items:center;gap:10px;max-width:860px;margin:auto}
+.hr h1{flex:1;font-size:1.05rem;line-height:1.25;margin:0}
+.btn{min-height:48px;min-width:48px;padding:10px 18px;border-radius:14px;border:1px solid var(--ln);background:var(--in);color:var(--tx);font:inherit;font-weight:650;cursor:pointer}
+.btn:hover{border-color:var(--ac)}
+.btn.p{background:var(--ac);color:var(--ax);border-color:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.pb{max-width:860px;margin:8px auto 0}
+.bar{height:14px;border-radius:9px;background:var(--in);border:1px solid var(--ln);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+.pt{font-size:.9rem;color:var(--mu);margin-top:4px}
+main{max-width:860px;margin:18px auto;padding:0 14px 40px}
+.sec{border-radius:22px;padding:18px;margin-bottom:16px}
+.sec.lk{opacity:.7}
+.sh{display:flex;gap:12px;align-items:center}
+.sh h2{margin:0;font-size:1.3rem;line-height:1.3;flex:1}
+.nm{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ac);color:var(--ax)}
+.st{font-size:.9rem;font-weight:700;color:var(--mu)}
+.done .st{color:var(--ok)}
+.bd{margin-top:12px}
+h3{font-size:1.1rem;margin:18px 0 6px}
+p,li{color:var(--tx)}
+ul,ol{padding-left:22px}
+li{margin:6px 0}
+.mu{color:var(--mu);font-size:.95rem}
+.note{border-left:4px solid var(--ac);padding:8px 12px;border-radius:10px;background:var(--in);margin:12px 0}
+.box{position:relative;margin:12px 0;border:1px solid var(--ln);border-radius:14px;background:var(--in);padding:12px}
+.box pre{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font:inherit}
+.box .lb{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.tw{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:320px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--ln)}
+.q{margin:16px 0;padding:12px;border:1px solid var(--ln);border-radius:14px;background:var(--in)}
+.q p{font-weight:700;margin:0 0 8px}
+.o{display:block;width:100%;text-align:left;margin:8px 0;min-height:48px}
+.o.ok{border-color:var(--ok);border-width:2px}
+.o.no{border-color:var(--bad);border-width:2px}
+.ex{margin-top:8px;font-size:.98rem}
+.fin{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+input[type=text]{width:100%;min-height:48px;padding:10px 14px;font:inherit;border-radius:14px;border:1px solid var(--ln);background:var(--in);color:var(--tx)}
+#cert{margin-top:14px;padding:30px 18px;text-align:center;border-radius:20px;border:3px double var(--ac)}
+#cert h2{font-size:1.7rem;margin:0 0 8px}
+#cn{font-size:1.7rem;font-weight:800;margin:14px 0;border-bottom:2px solid var(--ln);display:inline-block;min-width:60%;padding:0 10px}
+@media(min-width:700px){body{font-size:19px}.hr h1{font-size:1.25rem}.sec{padding:26px}}
+@media print{body{background:#fff!important;color:#000!important}header,.sec,.noprint,#top{display:none!important}main{margin:0;padding:0}#cert{background:#fff!important;color:#000!important;border-color:#000;box-shadow:none;backdrop-filter:none}#cert *{color:#000!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="g" id="top">
+ <div class="hr"><h1>Cara Buat Video AI guna Google Flow</h1><button class="btn" id="th" aria-label="Tukar tema">Tema</button></div>
+ <div class="pb"><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="7" id="pr"><i id="pf"></i></div><div class="pt" id="pt"></div></div>
+</header>
+<main id="m"></main>
+<script>
+var KEY="notaFlowV1",N=7;
+var st={done:[],name:"",q:{}};
+try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&typeof o==="object")st=Object.assign(st,o)}}catch(e){}
+if(!Array.isArray(st.done))st.done=[];
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+var theme="light";
+try{theme=localStorage.getItem(KEY+"t")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}catch(e){}
+function setTheme(t){theme=t;document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem(KEY+"t",t)}catch(e){}document.getElementById("th").textContent=t==="dark"?"☀ Cerah":"☾ Gelap"}
+setTheme(theme);
+document.getElementById("th").onclick=function(){setTheme(theme==="dark"?"light":"dark")};
+
+function box(id,lb,txt){return '<div class="box"><div class="lb">'+lb+'</div><pre id="'+id+'">'+txt+'</pre><button class="btn" data-c="'+id+'">Salin</button></div>'}
+var PROMPT="Seorang wanita memakai jaket merah berjalan di jalan hujan malam di Tokyo, kamera bergerak perlahan mengikutinya, bunyi hujan dan kereta yang jauh.";
+var TIPS="1. Setiap klip Veo pendek (sekitar 8 saat), jadi bahagikan cerita kepada beberapa shot.\n2. Untuk watak yang konsisten, guna gambar rujukan yang sama dan ulang nama serta ciri watak dalam setiap prompt.\n3. Letakkan dialog dalam tanda petikan.\n4. Jika hasil tidak tepat, ubah satu elemen prompt sahaja supaya anda tahu apa yang memberi kesan.\n5. Simpan prompt yang berjaya dalam fail teks untuk kegunaan akan datang.\n6. Kredit penjanaan berbeza mengikut pelan langganan. Semak baki kredit sebelum menjana banyak klip.";
+
+var S=[
+{t:"Apa itu Google Flow?",h:'<p>Google Flow ialah alat penjanaan video AI untuk pembikinan filem pendek.</p><p>Ia dikuasakan oleh model <b>Veo</b> (video) dan <b>Gemini</b> (prompt).</p>'},
+{t:"Sebelum mula",h:'<ul><li>Anda perlu langganan <b>Google AI Pro</b> atau <b>Google AI Ultra</b> untuk menjana video.</li><li>Guna pelayar <b>Chrome</b> atau <b>Edge</b> di komputer.</li></ul><div class="note">Ciri dan harga boleh berubah. Sahkan di labs.google/flow. Kredit penjanaan berbeza mengikut pelan langganan.</div>'},
+{t:"Buka Flow dan cipta projek",h:'<ol><li>Pergi ke <b>labs.google/flow</b>, log masuk dengan akaun Google, kemudian klik <b>Create with Flow</b>.</li><li>Cipta projek baharu. Beri nama projek supaya senang dicari semula.</li></ol>'+box("c1","Alamat Flow","labs.google/flow")},
+{t:"Pilih mod dan model",h:'<h3>Mod Video</h3><ul><li><b>Frames</b>: dari imej awal dan akhir.</li><li><b>Ingredients</b>: dari gambar rujukan watak atau objek.</li></ul><p class="mu">Pilihan nisbah dalam skrin: 16:9 dan 9:16.</p><h3>Model Video</h3><div class="tw"><table><tr><th>Model</th><th>Kredit (x1)</th></tr><tr><td>Veo 3.1 - Quality</td><td>100</td></tr><tr><td>Veo 3.1 - Fast</td><td>20</td></tr><tr><td>Veo 3.1 - Lite</td><td>10</td></tr><tr><td>Omni 1.1 Flash</td><td>15</td></tr></table></div><ul><li><b>Omni 1.1 Flash</b> ada pilihan resolusi 360p / 720p dan tempoh 4s / 6s / 8s / 10s. Angka 15 kredit ialah untuk tetapan 720p dan 10s.</li><li>Pilihan <b>x1, x2, x3, x4</b> berada di bawah model. Anggaran kredit dipaparkan di bawahnya ("Generating will use ... credits").</li></ul><h3>Mod Imej</h3><ul><li>Model: <b>Nano Banana Pro</b>, <b>Nano Banana 2 Lite</b>, <b>Nano Banana 2.1</b>.</li><li>Nisbah: 16:9, 4:3, 1:1, 3:4, 9:16.</li><li>Nano Banana 2.1 memaparkan 0 kredit dalam skrin.</li></ul><div class="note">Angka kredit diambil daripada skrin akaun penyedia nota ini dan boleh berubah. Semak semula di Flow sebelum menjana.</div>'},
+{t:"Tulis prompt dan jana klip",h:'<p>Terangkan: <b>subjek</b>, <b>aksi</b>, <b>latar</b>, <b>gaya kamera</b> (contoh: close-up, dolly in), <b>pencahayaan</b> dan <b>bunyi</b>.</p>'+box("c2","Contoh prompt",PROMPT)+'<ol><li>Klik <b>Generate</b>. Flow menghasilkan beberapa pilihan.</li><li>Tonton dengan butang <b>Play</b>.</li><li>Pilih yang terbaik.</li></ol>'},
+{t:"Bina video penuh, semak dan muat turun",h:'<ul><li><b>Extend</b>: sambung klip.</li><li><b>Jump To</b>: mulakan shot dari frame tertentu.</li><li><b>Scene Builder</b>: gabungkan beberapa shot menjadi satu cerita.</li></ul><p>Kemudian tonton semula keseluruhan video, betulkan bahagian yang tidak sesuai, dan muat turun.</p>'},
+{t:"Tips penting dan kuiz",h:'<h3>Tips penting</h3>'+box("c3","Senarai tips",TIPS)+'<h3>Kuiz ringkas</h3><div id="qz"></div>'}
+];
+
+var Q=[
+{q:"Langganan apa yang diperlukan untuk menjana video dalam Flow?",o:["Percuma, tiada langganan","Google AI Pro atau Google AI Ultra","Hanya akaun Google biasa"],a:1,e:"Nota menyatakan anda perlu langganan Google AI Pro atau Google AI Ultra."},
+{q:"Antara berikut, yang manakah elemen untuk ditulis dalam prompt?",o:["Subjek, aksi, latar, gaya kamera, pencahayaan dan bunyi","Nama pelayar dan alamat IP","Baki kredit dan tarikh langganan"],a:0,e:"Prompt menerangkan subjek, aksi, latar, gaya kamera, pencahayaan dan bunyi."},
+{q:"Setiap klip Veo sekitar berapa saat, dan apa yang patut dibuat?",o:["Sekitar 8 saat, bahagikan cerita kepada beberapa shot","Sekitar 8 minit, satu shot sudah cukup","Tiada had, jana satu klip sahaja"],a:0,e:"Klip Veo pendek (sekitar 8 saat), jadi cerita dibahagikan kepada beberapa shot."},
+{q:"Apakah fungsi Scene Builder?",o:["Menyambung satu klip","Memulakan shot dari frame tertentu","Menggabungkan beberapa shot menjadi satu cerita"],a:2,e:"Extend menyambung klip, Jump To memulakan dari frame tertentu, Scene Builder menggabungkan beberapa shot."},
+{q:"Hasil klip tidak tepat. Apa yang patut anda buat?",o:["Tulis semula seluruh prompt","Ubah satu elemen prompt sahaja","Padam projek"],a:1,e:"Ubah satu elemen sahaja supaya anda tahu apa yang memberi kesan."}
+];
+
+function unl(i){return i===0||!!st.done[i-1]}
+function cnt(){var c=0;for(var i=0;i<N;i++)if(st.done[i])c++;return c}
+function qDone(){return Object.keys(st.q).length>=Q.length}
+function score(){var s=0;Q.forEach(function(x,i){if(st.q[i]===x.a)s++});return s}
+function quiz(){
+ var h="";
+ Q.forEach(function(x,i){
+  h+='<div class="q"><p>'+(i+1)+'. '+x.q+'</p>';
+  x.o.forEach(function(t,j){
+   var c="btn o",a=st.q[i];
+   if(a!==undefined){if(j===x.a)c+=" ok";else if(j===a)c+=" no"}
+   h+='<button class="'+c+'" data-q="'+i+'" data-o="'+j+'"'+(a!==undefined?" disabled":"")+'>'+t+'</button>';
+  });
+  if(st.q[i]!==undefined)h+='<div class="ex"><b>'+(st.q[i]===x.a?"Betul. ":"Salah. ")+'</b>'+x.e+'</div>';
+  h+='</div>';
+ });
+ if(qDone())h+='<div class="note"><b>Skor: '+score()+' / '+Q.length+'</b></div>';
+ return h;
+}
+function render(){
+ var h="";
+ S.forEach(function(s,i){
+  var u=unl(i),d=!!st.done[i];
+  h+='<section class="g sec'+(u?"":" lk")+(d?" done":"")+'" id="s'+i+'"><div class="sh"><div class="nm">'+(i+1)+'</div><h2>'+s.t+'</h2><span class="st">'+(d?"✓ Siap":u?"Terbuka":"🔒 Terkunci")+'</span></div>';
+  if(u){
+   h+='<div class="bd">'+s.h+'</div>';
+   if(!d){
+    var last=i===N-1,dis=last&&!qDone();
+    h+='<div class="fin"><button class="btn p" data-d="'+i+'"'+(dis?" disabled":"")+'>Tanda siap</button>'+(dis?'<span class="mu">Jawab semua soalan kuiz dahulu.</span>':"")+'</div>';
+   }
+  }else h+='<p class="mu">Tanda Bahagian '+i+' siap untuk membuka bahagian ini.</p>';
+  h+='</section>';
+ });
+ if(cnt()===N){
+  h+='<section class="g sec noprint" id="cc"><h2>Sijil anda</h2><p>Taip nama anda, kemudian cetak.</p><input type="text" id="nm" placeholder="Nama anda" maxlength="60" value="'+(st.name||"").replace(/"/g,"&quot;")+'"><div class="fin"><button class="btn p" id="pp">Cetak sijil</button></div></section>';
+  h+='<div class="g" id="cert"><h2>Sijil Penyelesaian</h2><p>Dengan ini diperakui bahawa</p><div id="cn"></div><p>telah menyelesaikan nota<br><b>Cara Buat Video AI guna Google Flow</b><br>(7 bahagian)</p><p>Skor kuiz: '+score()+' / '+Q.length+'<br>Tarikh: '+new Date().toLocaleDateString("ms-MY",{day:"numeric",month:"long",year:"numeric"})+'</p></div>';
+ }
+ h+='<div class="fin noprint"><button class="btn" id="rs">Set semula kemajuan</button></div>';
+ document.getElementById("m").innerHTML=h;
+ var qz=document.getElementById("qz");if(qz)qz.innerHTML=quiz();
+ var n=document.getElementById("nm"),cn=document.getElementById("cn");
+ if(cn)cn.textContent=st.name||"[Nama anda]";
+ if(n)n.oninput=function(){st.name=n.value;save();cn.textContent=st.name||"[Nama anda]"};
+ var pp=document.getElementById("pp");if(pp)pp.onclick=function(){window.print()};
+ document.getElementById("rs").onclick=function(){if(confirm("Padam semua kemajuan?")){st={done:[],name:"",q:{}};save();render();window.scrollTo(0,0)}};
+ var c=cnt(),pct=Math.round(c/N*100);
+ document.getElementById("pf").style.width=pct+"%";
+ document.getElementById("pr").setAttribute("aria-valuenow",c);
+ document.getElementById("pt").textContent=c+" / "+N+" bahagian siap ("+pct+"%)";
+}
+function copy(id,b){
+ var t=document.getElementById(id).textContent;
+ function ok(){var o=b.textContent;b.textContent="Disalin ✓";setTimeout(function(){b.textContent=o},1500)}
+ function fb(){var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){b.textContent="Gagal, salin manual"}document.body.removeChild(a)}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else fb();
+}
+document.getElementById("m").addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b)return;
+ if(b.dataset.c){copy(b.dataset.c,b);return}
+ if(b.dataset.q!==undefined){var i=+b.dataset.q;if(st.q[i]===undefined){st.q[i]=+b.dataset.o;save();render()}return}
+ if(b.dataset.d!==undefined){var k=+b.dataset.d;if(k===N-1&&!qDone())return;st.done[k]=true;save();render();var nx=document.getElementById(k<N-1?"s"+(k+1):"cc");if(nx)nx.scrollIntoView({behavior:"smooth",block:"start"})}
+});
+render();
+</script>
+</body>
+</html>
